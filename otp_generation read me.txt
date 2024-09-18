@@ -1,0 +1,142 @@
+
+1. Requirements
+OTP Generation: Generate a 6-digit random OTP.
+Email Sending: Simulate sending the OTP to the user’s email.
+OTP Input: Prompt the user to enter the OTP.
+OTP Verification: Compare the entered OTP with the generated one.
+Error Handling: Allow retries and manage invalid inputs gracefully.
+
+
+2. Steps
+2.1 Install Required Packages
+Before starting, install the necessary Python libraries:
+
+pip install secure-smtplib
+
+
+
+
+
+2.2 Python Code Implementation
+import random
+import smtplib
+import getpass
+from email.message import EmailMessage
+
+# Function to generate a 6-digit OTP
+def generate_otp():
+    otp = random.randint(100000, 999999)
+    return otp
+
+# Function to simulate sending OTP via email
+def send_otp_via_email(receiver_email, otp):
+    
+    sender_email = 'djatin20@gmail.com'  # Replace with your email
+    sender_password = getpass.getpass(prompt="sender password here")  # Use getpass to avoid showing the password
+    
+    msg = EmailMessage()
+    msg.set_content(f"Your OTP is: {otp}")
+    msg['Subject'] = 'Your OTP Verification Code'
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    
+    # SMTP Configuration for sending email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(sender_email, sender_password)
+            smtp.send_message(msg)
+        print(f"OTP has been sent to {receiver_email}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+# Function to prompt user to enter OTP
+def get_user_otp():
+    return input("Enter the OTP you received: ")
+
+# Function to verify if the entered OTP matches the generated one
+def verify_otp(generated_otp, user_otp):
+    if generated_otp == int(user_otp):
+        
+        print("OTP verification successful. Access granted!")
+        
+    else:
+        print("Invalid OTP. Access denied.")
+
+# Main Function
+def otp_verification_system():
+    email = input("Enter your email: ")
+    
+    # Step 1: Generate OTP
+    otp = generate_otp()
+    
+    # Step 2: Send OTP to user’s email
+    send_otp_via_email(email, otp)
+    
+    # Step 3: User enters the OTP
+
+    
+    attempts = 3
+    while attempts > 0:
+        user_otp = get_user_otp()
+        
+        # Step 4: Verify OTP
+        if verify_otp(otp, user_otp):
+            break
+        else:
+            attempts -= 1
+            print(f"Incorrect OTP. You have {attempts} attempts left.")
+    
+    if attempts == 0:
+        print("Too many failed attempts. Access denied.")
+
+# Run the OTP verification system
+if __name__ == "__main__":
+    otp_verification_system()
+    
+	
+	
+	
+
+
+
+
+3. Code Explanation
+3.1 OTP Generation
+	The generate_otp function uses the random.randint function to generate a 6-digit OTP.
+
+3.2 Sending OTP via Email
+The send_otp_via_email function takes the receiver's email and the OTP as arguments and sends an email using the smtplib library. It logs in using SMTP with SSL (for security), sends the message, and handles errors in case the email fails to send.
+
+	a. smtplib.SMTP_SSL is used for a secure email transaction.
+	b. getpass.getpass() securely accepts the sender's email password without displaying it in the console.	
+	
+
+
+3.3 OTP Input
+	The get_user_otp function prompts the user to enter the OTP they received.
+
+3.4 OTP Verification
+	The verify_otp function compares the generated OTP with the user's input. If they match, it grants access; otherwise, it denies access.
+
+3.5 Error Handling
+	The system allows the user three attempts to input the correct OTP.
+	If the user enters the incorrect OTP, they are given a chance to retry. If they fail all attempts, access is denied.
+	
+	
+	
+How to Run the Program:
+	Install the required libraries.
+	Update the sender email address and password.
+	Run the program.
+
+Dependencies:
+	Python 3.x
+	smtplib
+	email.message.EmailMessage
+	getpass
+	random
+
+Test Cases:
+	Correct OTP entry.
+	Incorrect OTP entry and retry logic.
+	Failed email sending (e.g., invalid email).	
