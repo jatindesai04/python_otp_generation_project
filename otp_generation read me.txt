@@ -31,7 +31,7 @@ def generate_otp():
 # Function to simulate sending OTP via email
 def send_otp_via_email(receiver_email, otp):
     
-    sender_email = 'djatin20@gmail.com'  # Replace with your email
+    sender_email = 'sender_email@gmail.com'  # Replace with your email
     sender_password = getpass.getpass(prompt="sender password here")  # Use getpass to avoid showing the password
     
     msg = EmailMessage()
